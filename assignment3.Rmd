@@ -1,0 +1,72 @@
+---
+title: "Assignment3_EDoss"
+output: html_document
+date: "2024-09-04"
+---
+
+## Assignment 3
+
+```{r setup, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This is an analysis of light trap data from the Copenhagen Zoological Museum. I started by loading the data into a dataframe.
+
+```{r}
+df <- read.csv("C:/Users/egdos/Desktop/ADAFall24/insects.csv", header=TRUE)
+```
+
+### Graphing Data
+
+Next, I created a histogram showing the frequency of records for each year. I wanted to see if there was an increase or decrease in year frequencies of insects captured.
+
+```{r}
+hist(df$year, xlab="Year",ylab="# of Records",main="Record Counts by Year")
+```
+
+Then, I created a graph showing the number of appearances for each order in the dataset.
+
+```{r}
+ord_frq <- table(df$order)
+barplot(ord_frq,ylab="Records",main="Appearances of Insect Orders")
+```
+
+We can tell from this that the bulk of records are from Lepidoptera (aka butterflies and moths).
+
+### Statistical Tests
+
+First, I found the mean number of insects captured for each record, along with the standard deviation. This looked odd to me, so I looked for the max, and found a bizarre looking record that claimed to have caught 8396 insects in one day. Upon further examination, I found that this was 9 days worth of collection. I then searched for other records with counts over 1000, and found the majority of them (9/11) to be moths from the family Yponomeuta.
+
+```{r}
+  mean(df$individuals)
+  sd(df$individuals)
+  max(df$individuals)
+  df[df$individuals==8396,]
+  df[df$individuals>=1000,]
+```
+I assume these moths have extremely prolific breeding seasons, especially Y. evonymella, which appears 8 times in the list.
+
+### Statistical Tests
+
+For my statistical tests, I started by determining the distribution of an set I wanted to perform a t-test on: the count of how many times a particular number of individuals had been collected. While this was likely not normal, I wanted to check.
+
+```{r}
+lep_count<-table(df$individuals[df$order=="LEPIDOPTERA"])
+col_count<-table(df$individuals[df$order=="COLEOPTERA"])
+shapiro.test(lep_count)
+shapiro.test(col_count)
+```
+As suspected, the distribution was not normal. Since this is based on count, I know it isn't the presence of the >1000 samples we saw earlier. Next, I determined the mean number of collection instances, followed by a Wilcox test to see the difference between them.
+
+```{r}
+mean(col_count)
+mean(lep_count)
+wilcox.test(col_count,lep_count)
+```
+There was no significant distance between means, despite their large numerical gap. 
+
+Finally, I made a plot to begin looking a key point of the data: if decreases had been seen over time due to climate change. The simple scatter plot I created shows no correlation, with the only data points moving out of the dense bottom region being in more recent years with the aforementioned moth explosions.
+
+```{r}
+plot(df$year,df$individuals)
+```

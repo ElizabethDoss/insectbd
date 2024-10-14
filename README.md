@@ -4,3 +4,5 @@ This is an analysis of the Copenhagen Zoological Museum's light trap insect data
 Find my page for this project [here](https://elizabethdoss.github.io/insectbd/)
 
 And the R Markdown for my project [here](https://elizabethdoss.github.io/insectbd/assignment3.html)
+
+See a Javascript visualization [here](https://github.com/ElizabethDoss/assign8viz)
